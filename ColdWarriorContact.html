@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact – ColdWarrior</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- reCAPTCHA v3 -->
+  <script src="https://www.google.com/recaptcha/api.js?render=JOUW_SITE_KEY_HIER"></script>
+</head>
+
+<body class="contact-page">
+
+  <form id="contactForm" class="contact-form" autocomplete="off">
+    <h2>Get in touch</h2>
+    <p>Business, collabs or questions — send me a message.</p>
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        placeholder="Your name"
+        required
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="your@email.com"
+        required
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="message">Message</label>
+      <textarea
+        id="message"
+        name="message"
+        rows="5"
+        placeholder="Write your message here..."
+        required
+      ></textarea>
+    </div>
+
+    <button type="submit">Send message</button>
+    <div id="status"></div>
+
+    <p class="back-home">
+      <a href="Headsite.html">← Back to home</a>
+    </p>
+  </form>
+
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <script>
+    emailjs.init("Xz5dbr5B1oth31hNo");
+
+    document.getElementById('contactForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const status = document.getElementById('status');
+      status.textContent = "Sending...";
+
+      try {
+        await grecaptcha.ready();
+        const token = await grecaptcha.execute(
+          "6LdsbwwsAAAAAAFyKjUHAWX23-ve_hBHs94qF8ba",
+          { action: "contact_form" }
+        );
+
+        const verifyResp = await fetch('/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, action: 'contact_form' })
+        });
+
+        const verifyJson = await verifyResp.json();
+        if (!verifyJson.ok) {
+          status.textContent = "Captcha failed.";
+          return;
+        }
+
+        const params = {
+          from_name: document.getElementById('name').value,
+          from_email: document.getElementById('email').value,
+          message: document.getElementById('message').value
+        };
+
+        await emailjs.send("ColdWarriorcontactkey", "template_ql71b0r", params);
+
+        status.textContent = "Message sent successfully!";
+        this.reset();
+      } catch (err) {
+        status.textContent = "Something went wrong. Try again later.";
+      }
+    });
+  </script>
+
+</body>
+</html>

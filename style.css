@@ -1,0 +1,265 @@
+
+/* ===================== MAIN ===================== */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #828ED9;
+  color: white;
+  text-align: center;
+}
+
+/* ===================== HEADINGS ===================== */
+h1 {
+  font-size: 48px;
+  margin-top: 60px;
+}
+
+h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+p {
+  margin: 0 auto 12px;
+  font-size: 16px;
+  line-height: 10px;
+}
+
+/* ===================== MAIN CONTAINER ===================== */
+.box {
+  background: #A3A1E8;
+  max-width: 900px;
+  margin: 80px auto;
+  padding: 40px 25px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+/* ===================== LINK HUB (HOMEPAGE) ===================== */
+.link-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  max-width: 900px;
+  margin: 40px auto 0;
+  padding: 0 20px;
+}
+
+.link-box {
+  background: #A3A1E8;
+  padding: 40px 20px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.link-box:hover {
+  background: #6F6DE8;
+  transform: translateY(-6px);
+}
+
+/* ===================== BUTTONS ===================== */
+button {
+  background: #5A58E0;
+  color: black;
+  border: none;
+  padding: 12px 18px;
+  margin: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background: #4947C2;
+  transform: scale(1.05);
+}
+
+/* ===================== TABLE (SCHEDULE) ===================== */
+table {
+  width: 90%;
+  max-width: 900px;
+  margin: 20px auto;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #A3A1E8;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+th {
+  background-color: #6F6DE8;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  border-right: 2px solid #4B46B5;
+  border-bottom: 2px solid #4B46B5;
+}
+
+th:last-child {
+  border-right: none;
+}
+
+td {
+  background: #8F8CDE;
+  padding: 12px;
+  font-size: 14px;
+  border-right: 2px solid #4D4AE3;
+  border-bottom: 2px solid #4D4AE3;
+  transition: background 0.2s;
+}
+
+td:last-child {
+  border-right: none;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+td:hover {
+  background: #A3A1F0;
+}
+
+/* ===================== LINKS ===================== */
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ===================== FOOTER ===================== */
+footer {
+  margin-top: 80px;
+  padding: 30px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* ===================== SMALL SCREENS ===================== */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 36px;
+  }
+
+  .box {
+    margin: 40px 15px;
+    padding: 30px 20px;
+  }
+}
+
+/* ==================================================
+   CONTACT FORM
+   ================================================== */
+
+.contact-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contact-form {
+  background: #9998F1;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  width: 320px;
+  text-align: left;
+}
+
+.contact-form h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.contact-form label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  padding: 8px;
+  border: 1px solid black;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+.contact-form textarea {
+  resize: none;
+}
+
+.contact-form button {
+  width: 100%;
+  background-color: #6F6DE8;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.contact-form button:hover {
+  background-color: #4947C2;
+  transform: scale(1.03);
+}
+
+#status {
+  margin-top: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.button-link {
+  display: inline-block;
+  background: #6F6DE8;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.button-link:hover {
+  background: #4947C2;
+  transform: scale(1.05);
+}
+
+#title {
+  line-height: 10px;
+}
+
+#href:hover {
+  transform: scale(1.05);
+}
