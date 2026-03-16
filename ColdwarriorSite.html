@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ColdWarriorSite</title>
+<link rel="icon" type="image/jpg" href="images/ColdWarrior_Channel_logo.jpg">
+
+<style>
+    /* ===================== BODY & TYPO ===================== */
+  body {
+    font-family: Arial, sans-serif;
+    background: #828ED9;
+    margin: 0;
+    padding: 20px;
+    text-align: left;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  section {
+  scroll-margin-top: 80px;
+  margin-bottom: 50px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+    #About-me p {
+      line-height: 5px;
+    }
+
+    #project p {
+      line-height: 5px;
+    }
+
+  /* ===================== NAVBAR ===================== */
+  .navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    padding: 15px 0;
+    background-image: url('images/navbar.png');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+  }
+
+  .navbar a:hover { background: rgba(255,255,255,0.2); }
+
+  /* ===================== ACCORDION ===================== */
+  .toggle-accordion-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-image: url('images/socials.png');
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .accordion {
+    max-width: 250px;
+    margin: 0 auto 20px auto;
+    text-align: left;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 1.2s ease, opacity 0.8s ease;
+  }
+
+  .accordion.show { max-height: 1000px; opacity: 1; }
+
+  .accordion-item {
+    background: #C1C0F6;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+
+  .accordion-button {
+    width: 100%;
+    padding: 12px;
+    background: #e0e0e0;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .accordion-button:hover { background: #d0d0d0; }
+
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.8s ease, opacity 0.6s ease;
+    opacity: 0;
+    text-align: center;
+  }
+
+  .accordion-content img {
+    max-width: 200px;
+    margin: 15px auto;
+    display: block;
+    transition: transform 0.3s;
+  }
+
+  .accordion-content img:hover { transform: scale(1.1); }
+
+  .accordion-item.active .accordion-content {
+    max-height: 600px;
+    opacity: 1;
+  }
+
+  /* ===================== SPOTIFY ===================== */
+
+  .spotify-box { text-align:center; margin-top:20px; }
+  .spotify-box iframe { border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
+
+  /* ===================== POLL ===================== */
+  .poll-container {
+    text-align: center;
+    margin: 40px auto;
+    padding: 25px;
+    width: 330px;
+    background: #7d7beb;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    color: white;
+  }
+
+  .poll-timer { font-size:18px; font-weight:bold; margin-bottom:15px; }
+
+  .poll-buttons button {
+    background: #5a58e0;
+    color: black;
+    border: none;
+    padding: 12px 18px;
+    margin: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size:16px;
+    font-weight:bold;
+    transition: 0.2s;
+  }
+
+  .poll-buttons button:hover { background:#4947c2; }
+
+  .poll-results p { font-size:16px; font-weight:bold; margin:5px 0; }
+
+  /* Popup message */
+  .vote-message { background:#4f4ec7; padding:20px; border-radius:10px; margin-top:20px; color:white; display:none; }
+  .vote-message button { margin-top:10px; padding:8px 14px; border:none; background:#6f6de8; color:white; border-radius:6px; cursor:pointer; }
+
+  /* ===================== TABLE ===================== */
+  table {
+    width: 75%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 20px auto;
+    background: #A3A1E8;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    text-align: center;
+  }
+
+  th { background-color: #6F6DE8; color:white; font-weight:bold; padding:12px; font-size:16px; border-right:2px solid #4b46b5; border-bottom:2px solid #4b46b5; }
+  th:last-child { border-right:none; }
+
+  td { padding:12px; font-size:14px; color:white; background:#8f8cde; border-right:2px solid #4D4AE3; border-bottom:2px solid #4D4AE3; transition: background 0.2s; }
+  td:last-child { border-right:none; }
+  tr:last-child td { border-bottom:none; }
+  td:hover { background:#a3a1f0; cursor:default; }
+
+</style>
+</head>
+
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar">
+  <a href="#home">Home</a>
+  <a href="#About-me">About me</a>
+  <a href="ColdWarriorContact.html">Contact me</a>
+  <a href="#schedule">My schedule</a>
+  <a href="#project">Current project</a>
+  <a href="#guestbook">Guestbook</a>
+</nav>
+
+<!-- ===================== HOME ===================== -->
+<section id="home">
+  <h1>Welcome to my website!</h1>
+  <h3>I hope you have fun in my world</h3>
+</section>
+
+<!-- ===================== ACCORDION ===================== -->
+<button class="toggle-accordion-btn">My socials</button>
+<div class="accordion" id="accordionMenu">
+  <div class="accordion-item">
+    <button class="accordion-button">YouTube</button>
+    <div class="accordion-content">
+      <a href="https://www.youtube.com/@ColdWarrior-18" target="_blank">
+        <img src="images/youtube-logo-png-photo-0.png" alt="YouTube logo">
+      </a>
+      <p>Click the logo for my YouTube!</p>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <button class="accordion-button">Twitch</button>
+    <div class="accordion-content">
+      <a href="https://www.twitch.tv/coldwarrior4" target="_blank">
+        <img src="images/twitch_logo_icon_189242.png" alt="Twitch logo">
+      </a>
+      <p>Click the logo for my Twitch!</p>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <button class="accordion-button">Discord</button>
+    <div class="accordion-content">
+      <a href="https://discord.gg/f2dCPkfZ8r" target="_blank">
+        <img src="images/pngimg.com - discord_PNG9.png" alt="Discord logo">
+      </a>
+      <p>Click the logo for a server invite!</p>
+    </div>
+  </div>
+</div>
+
+<p>My favorite tunes for gaming, running, or just relaxing.</p>
+<div class="spotify-box">
+  <iframe src="https://open.spotify.com/embed/playlist/0G6xsQeiJ1Hat3RnEYxxk5?utm_source=generator"
+    width="25%"
+    height="152"
+    frameborder="0"
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+    loading="lazy"></iframe>
+</div>
+
+<!-- ===================== SCHEDULE ===================== -->
+<section id="schedule">
+  <h1>Here’s when you can catch me live on stream.</h1>
+  <table>
+    <tr>
+      <th>Monday</th><th>Tuesday</th><th>Wednesday</th>
+      <th>Thursday</th><th>Friday</th><th>Saturday</th><th>Sunday</th>
+    </tr>
+    <tr>
+      <td>N/A</td><td>N/A</td><td>N/A</td>
+      <td>N/A</td><td>N/A</td><td>N/A</td><td>13:30 UTC+1</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ===================== ABOUT ME ===================== -->
+<section id="About-me">
+  <h2>You can find some info about me here</h2>
+  <p>I’m ColdWarrior, a small content creator who mainly streams games.</p>
+  <p>I mostly play modded Minecraft, exploring new mods and creating fun gameplay moments.</p>
+  <p>Sometimes I upload short videos, but my focus is on streaming and interacting with my community.</p>
+  <p>I love sharing my gaming adventures and connecting with viewers on Twitch and Discord.</p>
+</section>
+
+<!-- ===================== POLL ===================== -->
+<section id="poll">
+  <div class="poll-container">
+    <h2>Vote what to do on stream!</h2>
+    <p id="pollLoginMsg" style="display:none;">
+      <a href="login.html?redirect=ColdwarriorSite.html%23poll" style="color:#ffe; font-weight:bold;">Login</a> to vote!
+    </p>
+    <p id="voteTimer" class="poll-timer"></p>
+    <p id="voteCooldown" class="poll-timer" style="display:none; color:#ffb347;"></p>
+    <div class="poll-buttons" id="pollButtons"></div>
+    <div class="poll-results" id="pollResults"></div>
+    <div id="voteMessage" class="vote-message">
+      <p id="voteMessageText"></p>
+      <button onclick="closeVoteMessage()">OK</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GUESTBOOK ===================== -->
+<section id="guestbook">
+  <h2>Community Wall</h2>
+  <p>Leave a message for ColdWarrior and the community!</p>
+
+  <div id="gbLoginMsg" style="display:none; margin: 16px auto; max-width:400px;">
+    <a href="login.html?redirect=ColdwarriorSite.html%23guestbook"
+      style="padding:10px 24px; background:#6F6DE8; color:white; border-radius:6px; font-weight:bold; text-decoration:none;">
+      Login to post a message
+    </a>
+  </div>
+
+  <div id="gbForm" style="max-width:400px; margin: 20px auto; display:none;">
+    <textarea id="gbMessage" placeholder="Your message..." maxlength="200" rows="3"
+      style="width:100%; padding:10px; border-radius:6px; border:none; font-size:15px; resize:none; box-sizing:border-box;"></textarea>
+    <button id="gbSubmit"
+      style="margin-top:10px; padding:10px 24px; background:#6F6DE8; color:white; border:none; border-radius:6px; font-size:15px; cursor:pointer; font-weight:bold;">
+      Post message
+    </button>
+    <button id="gbLogout"
+      style="margin-top:10px; margin-left:8px; padding:10px 16px; background:#444; color:white; border:none; border-radius:6px; font-size:14px; cursor:pointer;">
+      Logout
+    </button>
+    <p id="gbStatus" style="margin-top:8px; font-size:13px;"></p>
+  </div>
+
+<div id="gbWall" style="max-width:600px; margin:0 auto; height:400px; overflow-y:auto; padding-right:8px;"></div>
+</section>
+
+<!-- ===================== PROJECT ===================== -->
+<section id="project">
+  <h2>My current project.</h2>
+  <p>Nothing right now :(</p>
+  <p>Say something in my discord to help me find ideas for different projects.</p>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="scripts/script.js"></script>
+<script src="scripts/supabase.js"></script>
+</body>
+</html>

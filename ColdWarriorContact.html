@@ -4,14 +4,86 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact – ColdWarrior</title>
-
+  <link rel="icon" type="image/jpg" href="images/ColdWarrior_Channel_logo.jpg">
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
 
-  <!-- reCAPTCHA v3 -->
-  <script src="https://www.google.com/recaptcha/api.js?render=JOUW_SITE_KEY_HIER"></script>
+    .contact-form {
+      background: #7d7beb;
+      border-radius: 14px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+      color: white;
+    }
+
+    .contact-form h2 { margin: 0 0 8px; font-size: 24px; }
+    .contact-form > p { color: rgba(255,255,255,0.75); margin-bottom: 24px; font-size: 14px; }
+
+    .form-group { margin-bottom: 16px; text-align: left; }
+    .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 7px;
+      border: none;
+      font-size: 14px;
+      background: rgba(255,255,255,0.9);
+      color: #333;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: 2px solid white;
+      background: white;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background: #4947c2;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
+    }
+
+    button[type="submit"]:hover { background: #3d3baa; }
+    button[type="submit"]:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    #status {
+      margin-top: 12px;
+      font-size: 13px;
+      min-height: 18px;
+    }
+
+    #status.success { color: #b3ffcf; }
+    #status.error { color: #ffb3b3; }
+
+    .back-home { margin-top: 20px; font-size: 13px; text-align: center; }
+    .back-home a { color: rgba(255,255,255,0.8); text-decoration: none; }
+    .back-home a:hover { color: white; }
+  </style>
 </head>
 
-<body class="contact-page">
+<body>
 
   <form id="contactForm" class="contact-form" autocomplete="off">
     <h2>Get in touch</h2>
@@ -19,87 +91,57 @@
 
     <div class="form-group">
       <label for="name">Name</label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        placeholder="Your name"
-        required
-      >
+      <input type="text" id="name" name="name" placeholder="Your name" required>
     </div>
 
     <div class="form-group">
       <label for="email">Email</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        placeholder="your@email.com"
-        required
-      >
+      <input type="email" id="email" name="email" placeholder="your@email.com" required>
     </div>
 
     <div class="form-group">
       <label for="message">Message</label>
-      <textarea
-        id="message"
-        name="message"
-        rows="5"
-        placeholder="Write your message here..."
-        required
-      ></textarea>
+      <textarea id="message" name="message" rows="5" placeholder="Write your message here..." required></textarea>
     </div>
 
-    <button type="submit">Send message</button>
+    <button type="submit" id="submitBtn">Send message</button>
     <div id="status"></div>
 
     <p class="back-home">
-      <a href="Headsite.html">← Back to home</a>
+      <a href="ColdwarriorSite.html">← Back to home</a>
     </p>
   </form>
 
-  <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
   <script>
     emailjs.init("Xz5dbr5B1oth31hNo");
 
-    document.getElementById('contactForm').addEventListener('submit', async function(e){
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+
       const status = document.getElementById('status');
-      status.textContent = "Sending...";
+      const submitBtn = document.getElementById('submitBtn');
+
+      status.textContent = 'Sending...';
+      status.className = '';
+      submitBtn.disabled = true;
+
+      const params = {
+        from_name:  document.getElementById('name').value,
+        from_email: document.getElementById('email').value,
+        message:    document.getElementById('message').value
+      };
 
       try {
-        await grecaptcha.ready();
-        const token = await grecaptcha.execute(
-          "6LdsbwwsAAAAAAFyKjUHAWX23-ve_hBHs94qF8ba",
-          { action: "contact_form" }
-        );
-
-        const verifyResp = await fetch('/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token, action: 'contact_form' })
-        });
-
-        const verifyJson = await verifyResp.json();
-        if (!verifyJson.ok) {
-          status.textContent = "Captcha failed.";
-          return;
-        }
-
-        const params = {
-          from_name: document.getElementById('name').value,
-          from_email: document.getElementById('email').value,
-          message: document.getElementById('message').value
-        };
-
         await emailjs.send("ColdWarriorcontactkey", "template_ql71b0r", params);
-
         status.textContent = "Message sent successfully!";
+        status.className = 'success';
         this.reset();
       } catch (err) {
         status.textContent = "Something went wrong. Try again later.";
+        status.className = 'error';
+      } finally {
+        submitBtn.disabled = false;
       }
     });
   </script>

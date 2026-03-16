@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login – ColdWarrior</title>
+  <link rel="icon" type="image/jpg" href="images/ColdWarrior_Channel_logo.jpg">
+  <link rel="stylesheet" href="stylish.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      background: #828ED9;
+      font-family: Arial, sans-serif;
+    }
+
+    .auth-box {
+      background: #7d7beb;
+      border-radius: 14px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+      color: white;
+      text-align: center;
+    }
+
+    .auth-box img {
+      width: 70px;
+      border-radius: 50%;
+      margin-bottom: 14px;
+    }
+
+    .auth-box h2 { margin: 0 0 6px; font-size: 22px; }
+    .auth-box > p { font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 24px; }
+
+    .tabs {
+      display: flex;
+      background: #5a58e0;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.6);
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #6F6DE8;
+      color: white;
+      border-radius: 8px;
+    }
+
+    .auth-form { display: none; }
+    .auth-form.active { display: block; }
+
+    .auth-form input {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 7px;
+      border: none;
+      font-size: 14px;
+      margin-bottom: 12px;
+      background: rgba(255,255,255,0.9);
+      color: #333;
+      box-sizing: border-box;
+    }
+
+    .auth-form input:focus {
+      outline: 2px solid white;
+      background: white;
+    }
+
+    .auth-form button[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background: #4947c2;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
+    }
+
+    .auth-form button[type="submit"]:hover { background: #3d3baa; }
+
+    .status-msg {
+      margin-top: 14px;
+      font-size: 13px;
+      min-height: 18px;
+      color: #ffe;
+    }
+
+    .status-msg.error { color: #ffb3b3; }
+    .status-msg.success { color: #b3ffcf; }
+
+    .back-home { margin-top: 20px; font-size: 13px; }
+    .back-home a { color: rgba(255,255,255,0.8); text-decoration: none; }
+    .back-home a:hover { color: white; }
+  </style>
+</head>
+<body>
+
+<div class="auth-box">
+  <img src="images/ColdWarrior_Channel_logo.jpg" alt="ColdWarrior logo">
+  <h2>ColdWarrior</h2>
+  <p>Sign in or create an account to vote and leave messages.</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('login', this)">Login</button>
+    <button class="tab-btn" onclick="switchTab('signup', this)">Sign up</button>
+  </div>
+
+  <!-- LOGIN FORM -->
+  <form class="auth-form active" id="loginForm">
+    <input type="email" id="loginEmail" placeholder="Email" required>
+    <input type="password" id="loginPassword" placeholder="Password" required>
+    <button type="submit">Login</button>
+    <div class="status-msg" id="loginStatus"></div>
+  </form>
+
+  <!-- SIGNUP FORM -->
+  <form class="auth-form" id="signupForm">
+    <input type="text" id="signupUsername" placeholder="Username" maxlength="20" required>
+    <input type="email" id="signupEmail" placeholder="Email" required>
+    <input type="password" id="signupPassword" placeholder="Password (min. 6 characters)" required>
+    <input type="password" id="signupConfirm" placeholder="Confirm password" required>
+    <button type="submit">Create account</button>
+    <p>This system uses Supabase to make accounts so the authentication mail will be in name "Supabase Auth"</p>
+    <div class="status-msg" id="signupStatus"></div>
+  </form>
+
+  <p class="back-home"><a href="ColdwarriorSite.html">← Back to home</a></p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const _supabase = supabase.createClient(
+    'https://vrzrahjpfzikwwsawycs.supabase.co',
+    'sb_publishable_rfSfPZGLYIt2jLjFGiWnuQ_kDfyuOCv'
+  );
+
+  const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || 'ColdwarriorSite.html';
+
+  // If already logged in, redirect back
+  _supabase.auth.getSession().then(({ data }) => {
+    if (data.session) window.location.href = redirectUrl;
+  });
+
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+    document.getElementById(tab + 'Form').classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // LOGIN
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const status = document.getElementById('loginStatus');
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    status.textContent = 'Logging in...';
+    status.className = 'status-msg';
+
+    const { error } = await _supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      status.textContent = 'Incorrect email or password.';
+      status.className = 'status-msg error';
+    } else {
+      status.textContent = 'Logged in! Redirecting...';
+      status.className = 'status-msg success';
+      setTimeout(() => window.location.href = redirectUrl, 800);
+    }
+  });
+
+  // SIGNUP
+  document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const status = document.getElementById('signupStatus');
+    const username = document.getElementById('signupUsername').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const confirm = document.getElementById('signupConfirm').value;
+
+    if (!username) {
+      status.textContent = 'Please enter a username.';
+      status.className = 'status-msg error';
+      return;
+    }
+
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+      status.textContent = 'Username can only contain letters, numbers and underscores.';
+      status.className = 'status-msg error';
+      return;
+    }
+
+    if (password !== confirm) {
+      status.textContent = 'Passwords do not match!';
+      status.className = 'status-msg error';
+      return;
+    }
+
+    if (password.length < 6) {
+      status.textContent = 'Password must be at least 6 characters.';
+      status.className = 'status-msg error';
+      return;
+    }
+
+    status.textContent = 'Creating account...';
+    status.className = 'status-msg';
+
+    // Check if username is already taken
+    const { data: existing } = await _supabase
+      .from('profiles')
+      .select('id')
+      .eq('username', username)
+      .limit(1);
+
+    if (existing && existing.length > 0) {
+      status.textContent = 'That username is already taken!';
+      status.className = 'status-msg error';
+      return;
+    }
+
+    // Create auth account
+    const { data: authData, error: authError } = await _supabase.auth.signUp({ email, password });
+
+    if (authError) {
+      status.textContent = authError.message;
+      status.className = 'status-msg error';
+      return;
+    }
+
+    // Save username to localStorage until email is confirmed
+    localStorage.setItem('pendingUsername', username);
+
+    status.textContent = 'Account created! Check your email to confirm, then log in.';
+    status.className = 'status-msg success';
+  });
+</script>
+
+</body>
+</html>

@@ -1,265 +1,198 @@
-
-/* ===================== MAIN ===================== */
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
+/* ===================== BODY & TYPO ===================== */
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
   background: #828ED9;
+  margin: 0;
+  padding: 20px;
+  text-align: left;
+}
+
+html { scroll-behavior: smooth; }
+
+section { scroll-margin-top: 80px; margin-bottom:50px; text-align:center; }
+
+  #About-me p {
+    line-height: 5px;
+  }
+
+  #project p {
+    line-height: 5px;
+  }
+
+/* ===================== NAVBAR ===================== */
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  padding: 15px 0;
+  background-image: url('images/navbar.png');
+  background-size: cover;
+  background-position: center;
   color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+.navbar a:hover { background: rgba(255,255,255,0.2); }
+
+/* ===================== ACCORDION ===================== */
+.toggle-accordion-btn {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 15px;
+  font-size: 16px;
+  background-image: url('images/socials.png');
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   text-align: center;
 }
 
-/* ===================== HEADINGS ===================== */
-h1 {
-  font-size: 48px;
-  margin-top: 60px;
+.accordion {
+  max-width: 250px;
+  margin: 0 auto 20px auto;
+  text-align: left;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
 }
 
-h2 {
-  font-size: 32px;
-  margin-bottom: 20px;
-}
+.accordion.show { max-height: 1000px; opacity: 1; }
 
-h3 {
-  font-size: 22px;
+.accordion-item {
+  background: #C1C0F6;
   margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  overflow: hidden;
 }
 
-p {
-  margin: 0 auto 12px;
+.accordion-button {
+  width: 100%;
+  padding: 12px;
+  background: #e0e0e0;
+  border: none;
+  text-align: center;
   font-size: 16px;
-  line-height: 10px;
+  cursor: pointer;
 }
 
-/* ===================== MAIN CONTAINER ===================== */
-.box {
-  background: #A3A1E8;
-  max-width: 900px;
-  margin: 80px auto;
-  padding: 40px 25px;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+.accordion-button:hover { background: #d0d0d0; }
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+  opacity: 0;
+  text-align: center;
 }
 
-/* ===================== LINK HUB (HOMEPAGE) ===================== */
-.link-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 25px;
-  max-width: 900px;
-  margin: 40px auto 0;
-  padding: 0 20px;
+.accordion-content img {
+  max-width: 200px;
+  margin: 15px auto;
+  display: block;
+  transition: transform 0.3s;
 }
 
-.link-box {
-  background: #A3A1E8;
-  padding: 40px 20px;
-  border-radius: 14px;
-  text-decoration: none;
+.accordion-content img:hover { transform: scale(1.1); }
+
+.accordion-item.active .accordion-content {
+  max-height: 600px;
+  opacity: 1;
+}
+
+/* ===================== SPOTIFY ===================== */
+
+.spotify-box { text-align:center; margin-top:20px; }
+.spotify-box iframe { border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
+
+/* ===================== POLL ===================== */
+.poll-container {
+  text-align: center;
+  margin: 40px auto;
+  padding: 25px;
+  width: 330px;
+  background: #7d7beb;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
   color: white;
-  font-size: 20px;
-  font-weight: bold;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  transition: transform 0.2s ease, background 0.2s ease;
 }
 
-.link-box:hover {
-  background: #6F6DE8;
-  transform: translateY(-6px);
-}
+.poll-timer { font-size:18px; font-weight:bold; margin-bottom:15px; }
 
-/* ===================== BUTTONS ===================== */
-button {
-  background: #5A58E0;
+.poll-buttons button {
+  background: #5a58e0;
   color: black;
   border: none;
   padding: 12px 18px;
   margin: 8px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: background 0.2s ease, transform 0.2s ease;
+  font-size:16px;
+  font-weight:bold;
+  transition: 0.2s;
 }
 
-button:hover {
-  background: #4947C2;
-  transform: scale(1.05);
+.poll-buttons button:hover { background:#4947c2; }
+
+.poll-results p { font-size:16px; font-weight:bold; margin:5px 0; }
+
+/* Popup message */
+.vote-message { background:#4f4ec7; padding:20px; border-radius:10px; margin-top:20px; color:white; display:none; }
+.vote-message button { margin-top:10px; padding:8px 14px; border:none; background:#6f6de8; color:white; border-radius:6px; cursor:pointer; }
+
+/* ===================== ADMIN UI ===================== */
+#adminBtn { position:fixed; bottom:20px; left:20px; z-index:9999; padding:8px 10px; border-radius:6px; background:#333; color:white; border:none; cursor:pointer; }
+
+#adminLogin, #adminPanel {
+  position:fixed;
+  top:40%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background:#222;
+  padding:20px;
+  border-radius:10px;
+  color:white;
+  z-index:1000;
+  display:none;
 }
 
-/* ===================== TABLE (SCHEDULE) ===================== */
+#adminLogin input { padding:8px; border-radius:4px; border:none; margin-right:5px; }
+#adminPanel button { margin:5px; padding:8px 12px; border:none; border-radius:6px; cursor:pointer; background:#555; color:white; }
+#adminPanel button:hover { background:#777; }
+
+/* ===================== TABLE ===================== */
 table {
-  width: 90%;
-  max-width: 900px;
-  margin: 20px auto;
+  width: 75%;
   border-collapse: separate;
   border-spacing: 0;
+  margin: 20px auto;
   background: #A3A1E8;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-}
-
-th {
-  background-color: #6F6DE8;
-  color: white;
-  padding: 12px;
-  font-size: 16px;
-  border-right: 2px solid #4B46B5;
-  border-bottom: 2px solid #4B46B5;
-}
-
-th:last-child {
-  border-right: none;
-}
-
-td {
-  background: #8F8CDE;
-  padding: 12px;
-  font-size: 14px;
-  border-right: 2px solid #4D4AE3;
-  border-bottom: 2px solid #4D4AE3;
-  transition: background 0.2s;
-}
-
-td:last-child {
-  border-right: none;
-}
-
-tr:last-child td {
-  border-bottom: none;
-}
-
-td:hover {
-  background: #A3A1F0;
-}
-
-/* ===================== LINKS ===================== */
-a {
-  color: white;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-/* ===================== FOOTER ===================== */
-footer {
-  margin-top: 80px;
-  padding: 30px;
-  font-size: 14px;
-  opacity: 0.8;
-}
-
-/* ===================== SMALL SCREENS ===================== */
-@media (max-width: 600px) {
-  h1 {
-    font-size: 36px;
-  }
-
-  .box {
-    margin: 40px 15px;
-    padding: 30px 20px;
-  }
-}
-
-/* ==================================================
-   CONTACT FORM
-   ================================================== */
-
-.contact-page {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.contact-form {
-  background: #9998F1;
-  padding: 25px 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  width: 320px;
-  text-align: left;
-}
-
-.contact-form h2 {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.contact-form label {
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.contact-form input,
-.contact-form textarea {
-  width: 100%;
-  margin-top: 6px;
-  margin-bottom: 12px;
-  padding: 8px;
-  border: 1px solid black;
-  border-radius: 6px;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-.contact-form textarea {
-  resize: none;
-}
-
-.contact-form button {
-  width: 100%;
-  background-color: #6F6DE8;
-  color: white;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 8px;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.contact-form button:hover {
-  background-color: #4947C2;
-  transform: scale(1.03);
-}
-
-#status {
-  margin-top: 10px;
-  font-weight: bold;
   text-align: center;
 }
 
-.button-link {
-  display: inline-block;
-  background: #6F6DE8;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: 0.2s;
-}
+th { background-color: #6F6DE8; color:white; font-weight:bold; padding:12px; font-size:16px; border-right:2px solid #4b46b5; border-bottom:2px solid #4b46b5; }
+th:last-child { border-right:none; }
 
-.button-link:hover {
-  background: #4947C2;
-  transform: scale(1.05);
-}
-
-#title {
-  line-height: 10px;
-}
-
-#href:hover {
-  transform: scale(1.05);
-}
+td { padding:12px; font-size:14px; color:white; background:#8f8cde; border-right:2px solid #4D4AE3; border-bottom:2px solid #4D4AE3; transition: background 0.2s; }
+td:last-child { border-right:none; }
+tr:last-child td { border-bottom:none; }
+td:hover { background:#a3a1f0; cursor:default; }
