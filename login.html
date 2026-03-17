@@ -146,7 +146,7 @@
     <div class="status-msg" id="signupStatus"></div>
   </form>
 
-  <p class="back-home"><a href="ColdwarriorSite.html">← Back to home</a></p>
+  <p class="back-home"><a href="index.html">← Back to home</a></p>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -156,7 +156,7 @@
     'sb_publishable_rfSfPZGLYIt2jLjFGiWnuQ_kDfyuOCv'
   );
 
-  const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || 'ColdwarriorSite.html';
+  const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
 
   // If already logged in, redirect back
   _supabase.auth.getSession().then(({ data }) => {
