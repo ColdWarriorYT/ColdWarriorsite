@@ -12,11 +12,13 @@ html { scroll-behavior: smooth; }
 section { scroll-margin-top: 80px; margin-bottom:50px; text-align:center; }
 
   #About-me p {
-    line-height: 5px;
+    margin: 5px;
+    line-height: 1;
   }
 
   #project p {
-    line-height: 5px;
+    margin: 5px;
+    line-height: 1;
   }
 
 /* ===================== NAVBAR ===================== */
