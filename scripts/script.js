@@ -1,13 +1,10 @@
-// ===================== GLOBAL VARIABLES =====================
-let pollEndTime;
-let updateTimer;
-
 // ===================== GLOBAL INIT =====================
 document.addEventListener("DOMContentLoaded", () => {
     initAccordion();
     initScrollToTop();
     initFadeInSections();
-    initPoll();
+    initSnow();
+    initStickyRotation();
     console.log("All inits ran successfully");
 });
 
@@ -49,6 +46,7 @@ function initScrollToTop() {
         cursor:pointer;
         display:none;
         font-weight:bold;
+        z-index:999;
     `;
     document.body.appendChild(button);
 
@@ -75,101 +73,7 @@ function initFadeInSections() {
     sections.forEach(sec => observer.observe(sec));
 }
 
-// ===================== 5. POLL SYSTEM =====================
-function initPoll() {
-    let votes = JSON.parse(localStorage.getItem("pollVotes") || '{"Minecraft":0,"Modded Minecraft":0}');
-    pollEndTime = Number(localStorage.getItem("pollEndTime")) || (Date.now() + 24*60*60*1000);
-
-    const minecraftSpan = document.getElementById("minecraftVotes");
-    const moddedSpan = document.getElementById("moddedVotes");
-
-    function updateResults() {
-        minecraftSpan.textContent = votes["Minecraft"];
-        moddedSpan.textContent = votes["Modded Minecraft"];
-    }
-
-    updateTimer = function() {
-        const timerElement = document.getElementById("voteTimer");
-        let left = Math.max(0, Math.floor((pollEndTime - Date.now()) / 1000));
-        let min = Math.floor(left/60);
-        let sec = (left%60).toString().padStart(2,"0");
-        timerElement.textContent = `Time left: ${min}:${sec}`;
-
-        if(left <=0) {
-            document.querySelectorAll("#poll button[data-choice]").forEach(btn => {
-                btn.disabled = true;
-                btn.style.opacity = "0.5";
-                btn.style.cursor = "not-allowed";
-            });
-        }
-    };
-
-    function showMessage(text) {
-        const msg = document.getElementById("voteMessage");
-        document.getElementById("voteMessageText").textContent = text;
-        msg.style.display = "block";
-    }
-
-    window.closeVoteMessage = function() {
-        document.getElementById("voteMessage").style.display = "none";
-    };
-
-    document.querySelectorAll("#poll button[data-choice]").forEach(btn => {
-        btn.addEventListener("click", () => {
-            // check localStorage bij elke klik
-            let hasVoted = localStorage.getItem("voted") === "yes";
-            if (hasVoted) {
-                showMessage("You already voted!");
-                return;
-            }
-
-            const choice = btn.getAttribute("data-choice");
-            votes[choice]++;
-            localStorage.setItem("pollVotes", JSON.stringify(votes));
-            localStorage.setItem("voted", "yes");
-            updateResults();
-            showMessage("Thanks for voting!");
-        });
-    });
-
-    function startTimer() {
-        updateTimer();
-        setInterval(updateTimer, 1000);
-    }
-
-    startTimer();
-
-// ===================== 6. ADMIN UI =====================
-function initAdminUI() {
-    const adminBtn = document.getElementById("adminBtn");
-    const adminLogin = document.getElementById("adminLogin");
-    const adminPanel = document.getElementById("adminPanel");
-    const passwordInput = document.getElementById("adminPassword");
-    const loginBtn = adminLogin.querySelector("button");
-
-    const ADMIN_PASSWORD = "1804"; // pas hier aan
-
-    adminBtn.addEventListener("click", () => adminLogin.style.display="block");
-    window.closeAdminLogin = () => adminLogin.style.display="none";
-    window.closeAdminPanel = () => adminPanel.style.display="none";
-
-    loginBtn.addEventListener("click", checkAdminPassword);
-    passwordInput.addEventListener("keyup", (e) => {
-        if(e.key === "Enter") checkAdminPassword();
-    });
-
-    function checkAdminPassword() {
-        if(passwordInput.value === ADMIN_PASSWORD) {
-            adminLogin.style.display="none";
-            adminPanel.style.display="block";
-            passwordInput.value="";
-            console.log("Admin UI initialized");
-        } else {
-            alert("Incorrect password!");
-        }
-    }
-}
-// ===================== SNOW =====================
+// ===================== 4. SNOW =====================
 function initSnow() {
     const canvas = document.createElement('canvas');
     canvas.style.cssText = `
@@ -225,15 +129,11 @@ function initSnow() {
     draw();
 }
 
-initSnow();
-
-// ===================== STICKY NOTE ROTATION =====================
+// ===================== 5. STICKY NOTE ROTATION =====================
 function initStickyRotation() {
     const sections = document.querySelectorAll("section");
     sections.forEach(sec => {
-        const rotation = (Math.random() * 6 - 3).toFixed(2); // tussen -2 en +2 graden
+        const rotation = (Math.random() * 6 - 3).toFixed(2);
         sec.style.transform = `rotate(${rotation}deg)`;
     });
 }
-
-initStickyRotation();
