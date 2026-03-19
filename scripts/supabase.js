@@ -21,7 +21,6 @@ async function onAuthReady(session) {
     currentUser = session ? session.user : null;
 
     if (currentUser) {
-        // Check if there's a pending username to save
         const pending = localStorage.getItem('pendingUsername');
         if (pending) {
             await _supabase.from('profiles').insert([{
@@ -39,13 +38,14 @@ async function onAuthReady(session) {
     initSupabasePoll();
     updateNavbar();
 }
-    _supabase.auth.getSession().then(({ data }) => {
-        onAuthReady(data.session);
-    });
 
-    _supabase.auth.onAuthStateChange((_event, session) => {
-        onAuthReady(session);
-    });
+_supabase.auth.getSession().then(({ data }) => {
+    onAuthReady(data.session);
+});
+
+_supabase.auth.onAuthStateChange((_event, session) => {
+    onAuthReady(session);
+});
 
 // ===================== NAVBAR =====================
 function updateNavbar() {
@@ -82,7 +82,6 @@ async function initSupabasePoll() {
     pollButtons.innerHTML = '';
     pollResults.innerHTML = '';
 
-    // Load options from Supabase
     const { data: options, error } = await _supabase
         .from('poll_options')
         .select('*')
@@ -169,7 +168,8 @@ async function initSupabasePoll() {
     }
 
     await renderButtons();
-pollButtons.dataset.loading = '';}
+    pollButtons.dataset.loading = '';
+}
 
 function showVoteMessage(text) {
     const msg = document.getElementById('voteMessage');
@@ -180,6 +180,47 @@ function showVoteMessage(text) {
 window.closeVoteMessage = function() {
     document.getElementById('voteMessage').style.display = 'none';
 };
+
+// ===================== LANGUAGE DETECTION & TRANSLATION =====================
+async function detectLanguage(text) {
+    try {
+        const res = await fetch(
+            `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=auto|en`
+        );
+        const data = await res.json();
+        const lang = data.responseData?.detectedLanguage
+                  || data.matches?.[0]?.subject
+                  || null;
+        return lang;
+    } catch (e) {
+        return null;
+    }
+}
+
+async function translateText(text, fromLang) {
+    try {
+        const res = await fetch(
+            `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${fromLang}|en`
+        );
+        const data = await res.json();
+        return data.responseData?.translatedText || null;
+    } catch (e) {
+        return null;
+    }
+}
+
+// ===================== PROFANITY FILTER =====================
+async function containsProfanity(text) {
+    try {
+        const res = await fetch(
+            `https://www.purgomalum.com/service/containsprofanity?text=${encodeURIComponent(text)}`
+        );
+        const result = await res.text();
+        return result === 'true';
+    } catch (e) {
+        return false; // bij fout gewoon doorlaten
+    }
+}
 
 // ===================== GUESTBOOK =====================
 async function initGuestbook() {
@@ -198,21 +239,95 @@ async function initGuestbook() {
 
     await loadMessages();
 
+    // Add translator preview UI below the textarea
+    if (!document.getElementById('gbTranslator')) {
+        const translatorDiv = document.createElement('div');
+        translatorDiv.id = 'gbTranslator';
+        translatorDiv.style.cssText = `
+            display: none;
+            margin-top: 10px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 13px;
+            text-align: left;
+            color: white;
+        `;
+        translatorDiv.innerHTML = `
+            <p id="gbDetectedLang" style="margin:0 0 6px; font-weight:600;"></p>
+            <p style="margin:0 0 4px; opacity:0.8;">English translation:</p>
+            <p id="gbTranslatedText" style="margin:0; font-style:italic; opacity:0.95;"></p>
+        `;
+        document.getElementById('gbMessage').after(translatorDiv);
+    }
+
+    // Detect language as user types (with debounce)
+    let detectionTimeout;
+    document.getElementById('gbMessage').oninput = () => {
+        clearTimeout(detectionTimeout);
+        const msg = document.getElementById('gbMessage').value.trim();
+        const translatorDiv = document.getElementById('gbTranslator');
+
+        if (msg.length < 10) {
+            translatorDiv.style.display = 'none';
+            return;
+        }
+
+        detectionTimeout = setTimeout(async () => {
+            const lang = await detectLanguage(msg);
+            if (lang && lang !== 'en') {
+                document.getElementById('gbDetectedLang').textContent = `🌐 Detected: ${lang.toUpperCase()}`;
+                document.getElementById('gbTranslatedText').textContent = 'Translating...';
+                translatorDiv.style.display = 'block';
+                const translated = await translateText(msg, lang);
+                document.getElementById('gbTranslatedText').textContent = translated || 'Could not translate.';
+            } else {
+                translatorDiv.style.display = 'none';
+            }
+        }, 800);
+    };
+
     document.getElementById('gbSubmit').onclick = async () => {
         const message = document.getElementById('gbMessage').value.trim();
         if (!message) { gbStatus.textContent = 'Please write a message!'; return; }
+
+        gbStatus.textContent = '🔍 Checking message...';
+
+        // Profanity check
+        const hasProfanity = await containsProfanity(message);
+        if (hasProfanity) {
+            gbStatus.textContent = '❌ Your message contains inappropriate language and was not posted.';
+            return;
+        }
+
+        // Detect language — reject if undetectable
+        const lang = await detectLanguage(message);
+        if (!lang) {
+            gbStatus.textContent = '❌ Could not detect the language of your message. Please write in a recognisable language.';
+            return;
+        }
+
+        // If not English, append translation
+        let finalMessage = message;
+        if (lang !== 'en') {
+            const translated = await translateText(message, lang);
+            if (translated) {
+                finalMessage = `${message} [EN: ${translated}]`;
+            }
+        }
 
         gbStatus.textContent = 'Posting...';
 
         const { error } = await _supabase
             .from('guestbook')
-            .insert([{ name: currentUsername || 'Anonymous', message }]);
+            .insert([{ name: currentUsername || 'Anonymous', message: finalMessage }]);
 
         if (error) {
             gbStatus.textContent = 'Something went wrong, try again.';
         } else {
             gbStatus.textContent = 'Message posted!';
             document.getElementById('gbMessage').value = '';
+            document.getElementById('gbTranslator').style.display = 'none';
             await loadMessages();
         }
     };
