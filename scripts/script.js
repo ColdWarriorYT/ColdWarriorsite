@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initScrollToTop();
     initFadeInSections();
     initPoll();
-    initAdminUI();
     console.log("All inits ran successfully");
 });
 
@@ -139,23 +138,6 @@ function initPoll() {
     }
 
     startTimer();
-
-    // ================== ADMIN FUNCTIONS ==================
-    window.resetPollVotes = function() {
-        votes = {"Minecraft":0,"Modded Minecraft":0};
-        localStorage.setItem("pollVotes", JSON.stringify(votes));
-        localStorage.removeItem("voted");
-        updateResults();
-        showMessage("Votes reset!");
-    };
-
-    window.resetPollTimer = function() {
-        pollEndTime = Date.now() + 24*60*60*1000; // nieuwe 24h
-        localStorage.setItem("pollEndTime", pollEndTime);
-        updateTimer(); // direct updaten
-        showMessage("Timer reset!");
-    };
-}
 
 // ===================== 6. ADMIN UI =====================
 function initAdminUI() {
