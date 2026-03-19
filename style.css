@@ -1,25 +1,119 @@
+/* ===================== GOOGLE FONTS ===================== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+
+/* ===================== ANIMATED BACKGROUND ===================== */
+@keyframes bgshift {
+  0%   { background: #828ED9; }
+  25%  { background: #7a6fd4; }
+  50%  { background: #6e7fcc; }
+  75%  { background: #8e79d4; }
+  100% { background: #828ED9; }
+}
+
+/* ===================== ICE OVERLAY ===================== */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  box-shadow: inset 0 0 80px rgba(255,255,255,0.25);
+}
+
 /* ===================== BODY & TYPO ===================== */
 body {
-  font-family: Arial, sans-serif;
-  background: #828ED9;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
   margin: 0;
   padding: 20px;
   text-align: left;
+  animation: bgshift 15s ease infinite;
 }
 
 html { scroll-behavior: smooth; }
 
-section { scroll-margin-top: 80px; margin-bottom:50px; text-align:center; }
+/* ===================== CUSTOM SCROLLBAR ===================== */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: #6F6DE8; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #5a58e0; }
 
-  #About-me p {
-    margin: 5px;
-    line-height: 1;
-  }
+/* ===================== SECTIONS ===================== */
+section {
+  scroll-margin-top: 80px;
+  margin-bottom: 24px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 800px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  position: relative;
+  z-index: 1;
+}
+section {
+  opacity: 1 !important;
+  transform: none !important;
+}
+/* ===================== SECTION TITLES ===================== */
+section h1, section h2 {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 16px;
+}
 
-  #project p {
-    margin: 5px;
-    line-height: 1;
-  }
+section h1::after, section h2::after {
+  content: '';
+  display: block;
+  height: 3px;
+  width: 60%;
+  margin: 6px auto 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+  border-radius: 2px;
+}
+
+/* ===================== ABOUT ME & PROJECT ===================== */
+#About-me p {
+  margin: 5px;
+  line-height: 1;
+}
+
+#project p {
+  margin: 5px;
+  line-height: 1;
+}
+
+/* ===================== AVATAR ===================== */
+.site-avatar {
+  display: block;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 30px auto 10px;
+  border: 3px solid rgba(255,255,255,0.6);
+  box-shadow: 0 0 20px rgba(255,255,255,0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.site-avatar-name {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 0 10px rgba(255,255,255,0.4);
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
 
 /* ===================== NAVBAR ===================== */
 .navbar {
@@ -41,8 +135,8 @@ section { scroll-margin-top: 80px; margin-bottom:50px; text-align:center; }
 .navbar a {
   color: white;
   text-decoration: none;
-  font-weight: bold;
-  font-size: 18px;
+  font-weight: 600;
+  font-size: 16px;
   padding: 8px 14px;
   border-radius: 6px;
   transition: background 0.3s ease;
@@ -56,12 +150,15 @@ section { scroll-margin-top: 80px; margin-bottom:50px; text-align:center; }
   margin: 20px auto;
   padding: 10px 15px;
   font-size: 16px;
+  font-family: 'Poppins', sans-serif;
   background-image: url('images/socials.png');
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .accordion {
@@ -71,7 +168,9 @@ section { scroll-margin-top: 80px; margin-bottom:50px; text-align:center; }
   overflow: hidden;
   max-height: 0;
   opacity: 0;
-  transition: max-height 0.5s ease, opacity 0.5s ease;
+  transition: max-height 1.2s ease, opacity 0.8s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .accordion.show { max-height: 1000px; opacity: 1; }
@@ -91,6 +190,7 @@ section { scroll-margin-top: 80px; margin-bottom:50px; text-align:center; }
   border: none;
   text-align: center;
   font-size: 16px;
+  font-family: 'Poppins', sans-serif;
   cursor: pointer;
 }
 
@@ -99,7 +199,7 @@ section { scroll-margin-top: 80px; margin-bottom:50px; text-align:center; }
 .accordion-content {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.4s ease;
+  transition: max-height 0.8s ease, opacity 0.6s ease;
   opacity: 0;
   text-align: center;
 }
@@ -119,64 +219,155 @@ section { scroll-margin-top: 80px; margin-bottom:50px; text-align:center; }
 }
 
 /* ===================== SPOTIFY ===================== */
-
-.spotify-box { text-align:center; margin-top:20px; }
-.spotify-box iframe { border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
+.spotify-box { text-align: center; margin-top: 20px; position: relative; z-index: 1; }
+.spotify-box iframe { border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
 
 /* ===================== POLL ===================== */
 .poll-container {
   text-align: center;
-  margin: 40px auto;
+  margin: 20px auto;
   padding: 25px;
   width: 330px;
-  background: #7d7beb;
+  background: rgba(125,123,235,0.7);
   border-radius: 12px;
   box-shadow: 0 4px 14px rgba(0,0,0,0.25);
   color: white;
 }
 
-.poll-timer { font-size:18px; font-weight:bold; margin-bottom:15px; }
+.poll-timer { font-size: 18px; font-weight: 600; margin-bottom: 15px; }
 
 .poll-buttons button {
   background: #5a58e0;
-  color: black;
+  color: white;
   border: none;
   padding: 12px 18px;
   margin: 8px;
   border-radius: 8px;
   cursor: pointer;
-  font-size:16px;
-  font-weight:bold;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
   transition: 0.2s;
 }
 
-.poll-buttons button:hover { background:#4947c2; }
+.poll-buttons button:hover { background: #4947c2; }
+.poll-results p { font-size: 16px; font-weight: 600; margin: 5px 0; }
 
-.poll-results p { font-size:16px; font-weight:bold; margin:5px 0; }
-
-/* Popup message */
-.vote-message { background:#4f4ec7; padding:20px; border-radius:10px; margin-top:20px; color:white; display:none; }
-.vote-message button { margin-top:10px; padding:8px 14px; border:none; background:#6f6de8; color:white; border-radius:6px; cursor:pointer; }
-
-/* ===================== ADMIN UI ===================== */
-#adminBtn { position:fixed; bottom:20px; left:20px; z-index:9999; padding:8px 10px; border-radius:6px; background:#333; color:white; border:none; cursor:pointer; }
-
-#adminLogin, #adminPanel {
-  position:fixed;
-  top:40%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  background:#222;
-  padding:20px;
-  border-radius:10px;
-  color:white;
-  z-index:1000;
-  display:none;
+.vote-message { background: #4f4ec7; padding: 20px; border-radius: 10px; margin-top: 20px; color: white; display: none; }
+.vote-message button {
+  margin-top: 10px;
+  padding: 8px 14px;
+  border: none;
+  background: #6f6de8;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
 }
 
-#adminLogin input { padding:8px; border-radius:4px; border:none; margin-right:5px; }
-#adminPanel button { margin:5px; padding:8px 12px; border:none; border-radius:6px; cursor:pointer; background:#555; color:white; }
-#adminPanel button:hover { background:#777; }
+/* ===================== GUESTBOOK ===================== */
+#gbWall {
+  max-width: 600px;
+  margin: 0 auto;
+  height: 400px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+#gbForm {
+  max-width: 400px;
+  margin: 20px auto;
+  display: none;
+}
+
+#gbMessage {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  resize: none;
+  box-sizing: border-box;
+}
+
+#gbSubmit {
+  margin-top: 10px;
+  padding: 10px 24px;
+  background: #6F6DE8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#gbLogout {
+  margin-top: 10px;
+  margin-left: 8px;
+  padding: 10px 16px;
+  background: #444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+}
+
+#gbStatus { margin-top: 8px; font-size: 13px; }
+
+#gbLoginMsg {
+  display: none;
+  margin: 16px auto;
+  max-width: 400px;
+}
+
+#gbLoginMsg a {
+  padding: 10px 24px;
+  background: #6F6DE8;
+  color: white;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ===================== FRIENDS ===================== */
+.friends-row {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.friend-link {
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+}
+
+.friend-link img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #6F6DE8;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.friend-link img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 16px rgba(180,220,255,0.7);
+}
+
+.friend-link p {
+  margin-top: 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
 
 /* ===================== TABLE ===================== */
 table {
@@ -191,10 +382,10 @@ table {
   text-align: center;
 }
 
-th { background-color: #6F6DE8; color:white; font-weight:bold; padding:12px; font-size:16px; border-right:2px solid #4b46b5; border-bottom:2px solid #4b46b5; }
-th:last-child { border-right:none; }
+th { background-color: #6F6DE8; color: white; font-weight: 700; padding: 12px; font-size: 16px; border-right: 2px solid #4b46b5; border-bottom: 2px solid #4b46b5; }
+th:last-child { border-right: none; }
 
-td { padding:12px; font-size:14px; color:white; background:#8f8cde; border-right:2px solid #4D4AE3; border-bottom:2px solid #4D4AE3; transition: background 0.2s; }
-td:last-child { border-right:none; }
-tr:last-child td { border-bottom:none; }
-td:hover { background:#a3a1f0; cursor:default; }
+td { padding: 12px; font-size: 14px; color: white; background: #8f8cde; border-right: 2px solid #4D4AE3; border-bottom: 2px solid #4D4AE3; transition: background 0.2s; }
+td:last-child { border-right: none; }
+tr:last-child td { border-bottom: none; }
+td:hover { background: #a3a1f0; cursor: default; }

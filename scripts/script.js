@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initAccordion();
     initScrollToTop();
     initFadeInSections();
-    initTwitchEmbed();
     initPoll();
     initAdminUI();
     console.log("All inits ran successfully");
@@ -188,3 +187,71 @@ function initAdminUI() {
         }
     }
 }
+// ===================== SNOW =====================
+function initSnow() {
+    const canvas = document.createElement('canvas');
+    canvas.style.cssText = `
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 0;
+    `;
+    document.body.prepend(canvas);
+
+    const ctx = canvas.getContext('2d');
+    let flakes = [];
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    for (let i = 0; i < 60; i++) {
+        flakes.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 3 + 1,
+            speed: Math.random() * 0.5 + 0.2,
+            drift: Math.random() * 0.4 - 0.2,
+            opacity: Math.random() * 0.4 + 0.1
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        flakes.forEach(f => {
+            ctx.beginPath();
+            ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${f.opacity})`;
+            ctx.fill();
+
+            f.y += f.speed;
+            f.x += f.drift;
+
+            if (f.y > canvas.height) {
+                f.y = -5;
+                f.x = Math.random() * canvas.width;
+            }
+            if (f.x > canvas.width) f.x = 0;
+            if (f.x < 0) f.x = canvas.width;
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
+}
+
+initSnow();
+
+// ===================== STICKY NOTE ROTATION =====================
+function initStickyRotation() {
+    const sections = document.querySelectorAll("section");
+    sections.forEach(sec => {
+        const rotation = (Math.random() * 6 - 3).toFixed(2); // tussen -2 en +2 graden
+        sec.style.transform = `rotate(${rotation}deg)`;
+    });
+}
+
+initStickyRotation();
